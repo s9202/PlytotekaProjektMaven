@@ -41,10 +41,10 @@ public class KolekcjaPlyt {
 	
 	
 	
-	public void	dodajPlyte( String pWykonawca, String pTytul, PlytaGatunek pGatunek, int pRok ) {
+	public void	dodajPlyte(long pId, String pWykonawca, String pTytul, PlytaGatunek pGatunek, int pRok ) {
 		PropertyConfigurator.configure("Log4J.properties");
 		try {
-			addToList( new Plyta( pWykonawca, pTytul, pGatunek, pRok ) );
+			addToList( new Plyta( pId, pWykonawca, pTytul, pGatunek, pRok ) );
 		}
 		catch (MojWyjatek e) {
 			logger.error(e);
@@ -83,16 +83,16 @@ public class KolekcjaPlyt {
 	
 	
 	public void edytujPlyte( String pWykonawca, String pTytul, PlytaGatunek pGatunek, int pRok,
-							 String nowyWyk, String nowyTyt, PlytaGatunek nowyGat, int nowyRok ) {
+							 long nowyId, String nowyWyk, String nowyTyt, PlytaGatunek nowyGat, int nowyRok ) {
 		
 		int nrPlyty = wyszukajPlyte( pWykonawca, pTytul, pGatunek, pRok );
-		edytujPlyte( nrPlyty, nowyWyk, nowyTyt, nowyGat, nowyRok );
+		edytujPlyte( nrPlyty, nowyId, nowyWyk, nowyTyt, nowyGat, nowyRok );
 	}
 
 	
-	public void edytujPlyte( int pNumerPlyty, String nowyWyk, String nowyTyt, PlytaGatunek nowyGat, int nowyRok ) {
+	public void edytujPlyte( int pNumerPlyty, long nowyId, String nowyWyk, String nowyTyt, PlytaGatunek nowyGat, int nowyRok ) {
 		
-		Plyta plyta = new Plyta( nowyWyk, nowyTyt, nowyGat, nowyRok );
+		Plyta plyta = new Plyta(nowyId, nowyWyk, nowyTyt, nowyGat, nowyRok );
 		plyty.set( pNumerPlyty , plyta );
 	}
 	
@@ -118,5 +118,8 @@ public class KolekcjaPlyt {
 		return plyty.get(nrPlyty);
 	}
 	
-	
+
+	public List<Plyta> dajPlyty() {
+		return plyty;
+	}
 }

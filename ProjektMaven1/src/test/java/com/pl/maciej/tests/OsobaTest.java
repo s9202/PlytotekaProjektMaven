@@ -24,8 +24,10 @@ public class OsobaTest {
 	static final String BLAD_KOM_WYK_PLYT 	= "Dodanie p³yty z nieokreœlonym wykonawc¹ lub niepoprawne wyszukiwanie p³yty!";
 	static final String BLAD_KOM_TYT_PLYT 	= "Dodanie p³yty z pustym tytu³em lub niepoprawne wyszukiwanie p³yty!";
 	static final String BLAD_KOM_USU_PLYT 	= "Niepoprawne usuwanie plyty, lub dodawanie/usuwanie plyt.";
+	static final String BLAD_KOM_SZU_PLYT 	= "Niepoprawne szukanie plyty, lub dodawanie plyt.";
+	static final String BLAD_KOM_EDY_PLYT 	= "Niepoprawne edytowanie plytu, lub wyszukiwanie plyt.";
 	
-	
+	static	long			id;
 	static	String			imie;
 	static	String			nazwisko;
 			Plyta			plyta;
@@ -41,6 +43,7 @@ public class OsobaTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		id			= 1;
 		imie		= "Jan";
 		nazwisko	= "Kowalski";
 		wykonawca	= "Dire Straits";
@@ -82,50 +85,39 @@ public class OsobaTest {
 
 	@Test
 	public final void testDodajPlyte() {
-		osoba.dodajPlyte(wykonawca, tytul, gatunek, rokWydania);
+		osoba.dodajPlyte(id, wykonawca, tytul, gatunek, rokWydania);
 		assertTrue( BLAD_KOM_DOD_PLYT, osoba.wyszukajPlyte(wykonawca, tytul, gatunek, rokWydania) >= 0 );
 	}
 	@Test
 	public final void testDodajPlyte_RokWydania() {
-		osoba.dodajPlyte(wykonawca, tytul, gatunek, rokWydania2);
+		osoba.dodajPlyte(id, wykonawca, tytul, gatunek, rokWydania2);
 		assertFalse( BLAD_KOM_ROK_PLYT, osoba.wyszukajPlyte(wykonawca, tytul, gatunek, rokWydania2) >= 0 );
 	}
-	@Test
-	public final void testDodajPlyte_Wykonawca() {
-		osoba.dodajPlyte(wykonawca2, tytul, gatunek, rokWydania);
-		assertFalse( BLAD_KOM_WYK_PLYT, osoba.wyszukajPlyte(wykonawca2, tytul, gatunek, rokWydania) >= 0 );
-	}
+/*
 	@Test
 	public final void testDodajPlyte_Tytul() {
 		osoba.dodajPlyte(wykonawca, tytul2, gatunek, rokWydania);
 		assertFalse( BLAD_KOM_TYT_PLYT, osoba.wyszukajPlyte(wykonawca, tytul2, gatunek, rokWydania) >= 0 );
 	}
-
-	@Test
-	public final void testUsunPlyteInt() {
-		fail("Not yet implemented"); // TODO
-	}
-
+*/
 	@Test
 	public final void testUsunPlyteStringStringPlytaGatunekInt() {
-		osoba.dodajPlyte(wykonawca, tytul, gatunek, rokWydania);
+		osoba.dodajPlyte(id, wykonawca, tytul, gatunek, rokWydania);
 		osoba.usunPlyte(wykonawca, tytul, gatunek, rokWydania);
 		assertFalse( BLAD_KOM_USU_PLYT, osoba.wyszukajPlyte(wykonawca, tytul, gatunek, rokWydania) >= 0 );
 	}
 
 	@Test
 	public final void testWyszukajPlyte() {
-		fail("Not yet implemented"); // TODO
-	}
-
-	@Test
-	public final void testEdytujPlyteIntStringStringPlytaGatunekInt() {
-		fail("Not yet implemented"); // TODO
+		osoba.dodajPlyte(id, wykonawca, tytul, gatunek, rokWydania);
+		assertTrue( BLAD_KOM_SZU_PLYT, osoba.wyszukajPlyte(wykonawca, tytul, gatunek, rokWydania) == 0 );
 	}
 
 	@Test
 	public final void testEdytujPlyteStringStringPlytaGatunekIntStringStringPlytaGatunekInt() {
-		fail("Not yet implemented"); // TODO
+		osoba.dodajPlyte(id, wykonawca, tytul, gatunek, rokWydania);
+		osoba.edytujPlyte(wykonawca, tytul, gatunek, rokWydania, id, wykonawca, tytul, gatunek, rokWydania2);
+		assertFalse( BLAD_KOM_EDY_PLYT, osoba.wyszukajPlyte(wykonawca, tytul, gatunek, rokWydania2) != 0 );
 	}
 
 	@Test

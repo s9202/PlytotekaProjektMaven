@@ -5,6 +5,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.pl.maciej.services.OsobaDBManager;
+import com.pl.maciej.services.PlytaDBManager;
 	
 
 public class Main {
@@ -25,33 +26,42 @@ public class Main {
 		
 		
 		plyty = new KolekcjaPlyt();
-		plyty.dodajPlyte( "Budka Suflera", "Akustycznie", PlytaGatunek.rock, 1998 );
-		plyty.dodajPlyte( "Budka Suflera", "Nic nie boli, tak jak zycie", PlytaGatunek.rock, 1997);
-		plyty.dodajPlyte( "Modern Talking", "Back For Good", PlytaGatunek.eurodisco, 1998);
-		plyty.dodajPlyte( "Modern Talking", "Back For Good", PlytaGatunek.eurodisco, 1998);
+		plyty.dodajPlyte( 1, "Budka Suflera", "Akustycznie", PlytaGatunek.rock, 1998 );
+		plyty.dodajPlyte( 2, "Budka Suflera", "Nic nie boli, tak jak zycie", PlytaGatunek.rock, 1997);
+		plyty.dodajPlyte( 3, "Modern Talking", "Back For Good", PlytaGatunek.eurodisco, 1998);
 
-		Osoba o1 = new Osoba("Andrzej", "Nowak", plyty);
+		Osoba o1 = new Osoba("Andrzej", "Nowak", plyty, 1);
 		
 		
 		plyty = new KolekcjaPlyt();
-		plyty.dodajPlyte( "The Prodigy", "Invaders Must Die", PlytaGatunek.techno, 2009);
-		plyty.dodajPlyte( "Scooter", "Jumpin' All Over the World", PlytaGatunek.techno, 2008);
-		plyty.dodajPlyte( "Gigi d'Agostino", "L'Amour Toujours", PlytaGatunek.techno, 1999);
+		plyty.dodajPlyte( 4, "The Prodigy", "Invaders Must Die", PlytaGatunek.techno, 2009);
+		plyty.dodajPlyte( 5, "Scooter", "Jumpin' All Over the World", PlytaGatunek.techno, 2008);
+		plyty.dodajPlyte( 6, "Gigi d'Agostino", "L'Amour Toujours", PlytaGatunek.techno, 1999);
 	
-		Osoba o2 = new Osoba("Jan", "Kluska", plyty);
-		o2.dodajPlyte("Gigi d'Agostino", "Bla bla bla", PlytaGatunek.techno, 1997);
+		Osoba o2 = new Osoba("Jan", "Kluska", plyty, 2);
+		o2.dodajPlyte( 7, "Gigi d'Agostino", "Bla bla bla", PlytaGatunek.techno, 1997);
 		
 		o1.wyswietlPlyty();
 		o2.wyswietlPlyty();
 		
-		OsobaDBManager db = new OsobaDBManager();
-		db.dodajOsobe(o1);
-		db.dodajOsobe(o2);
+		System.out.println("\nKoniec programu, poczatek bazy.\n");
+//		Plyta plyta1 = new Plyta( "Budka Suflera", "Akustycznie", PlytaGatunek.rock, 1998 );
 		
-		for(Osoba osoba: db.dajWszystkieOsoby()) {
-			System.out.println(osoba);
+		OsobaDBManager odb = new OsobaDBManager();
+		PlytaDBManager pdb = new PlytaDBManager();
+		
+		odb.dodajOsobe(o1);
+		odb.dodajOsobe(o2);
+		
+		pdb.dodajKolekcjePlyt( o1 );
+		pdb.dodajKolekcjePlyt( o2 );
+		
+		for( Osoba osoba: odb.dajWszystkieOsoby() ) {
+			System.out.println("Plyty nalezace do: " + osoba);
+			for( Plyta plyta: pdb.dajWszystkiePlyty(osoba) ) {
+				System.out.println( plyta.plyta() );
+			}
 		}
-		
 	}
 
 }
