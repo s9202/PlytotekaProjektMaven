@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import com.pl.maciej.prog.Osoba;
+import com.pl.maciej.prog.Plyta;
 
 public class OsobaDBManager {
 	
@@ -20,6 +21,8 @@ public class OsobaDBManager {
 	private PreparedStatement polecenieDodaniaOsoby;
 	private PreparedStatement polecenieOdczytuOsob;
 	private PreparedStatement polecenieUsunieciaWszystkich;
+	private PreparedStatement polecenieUsunieciaOsoby;
+	private PreparedStatement polecenieOdczytuOsoby;
 	
 	
 	public OsobaDBManager()
@@ -69,6 +72,14 @@ public class OsobaDBManager {
 					"DELETE FROM osoba" +
 					"");
 			
+			polecenieUsunieciaOsoby = polaczenie.prepareStatement("" +
+					"DELETE FROM osoba WHERE id = ?" +
+					"");
+			
+			polecenieOdczytuOsoby = polaczenie.prepareStatement("" +
+					"SELECT * FROM osoba WHERE id = ?" +
+					"");
+			
 		}
 		catch (SQLException e) {
 			System.out.println("7 blad bazy danych:" + e.getMessage());
@@ -83,10 +94,26 @@ public class OsobaDBManager {
 			polecenieDodaniaOsoby.executeUpdate();
 		} 
 		catch (SQLException e) {
-			System.out.println("8 blad bazy danych:" + e.getMessage());
+			System.out.println("dodajOsobe (id=" + Long.toString(o.dajId())  + ") - blad bazy danych:" + e.getMessage());
 			//e.printStackTrace();
 		}
 	
+	}
+	
+	public Osoba dajOsobe( long id ) {
+		Osoba osoba = null;
+		try {
+			polecenieOdczytuOsoby.setLong(1, id);
+			ResultSet rs = polecenieOdczytuOsoby.executeQuery();
+			if(rs.next()) {
+				osoba = new Osoba( rs.getString("imie"), rs.getString("nazwisko"), null, rs.getLong("id") );
+			}
+		}
+		catch (SQLException e) {
+			System.out.println("dajOsobe - blad bazy danych:" + e.getMessage());
+		}
+			
+		return osoba;
 	}
 	
 	public List<Osoba> dajWszystkieOsoby() {
@@ -105,8 +132,25 @@ public class OsobaDBManager {
 		
 	}
 	
+	public void usunOsobe( Osoba o, PlytaDBManager plytaDB ) {
+		try {
+			if( o != null ) {
+				if( plytaDB != null ) {
+					for( Plyta p : o.dajPlyty() )
+						plytaDB.usunPlyte( p );
+				}
+				polecenieUsunieciaOsoby.setLong(1, o.dajId());
+				polecenieUsunieciaOsoby.executeUpdate();
+			}
+		} catch (SQLException e) {
+			System.out.println("usunPlyte - blad bazy danych:" + e.getMessage());
+	}
+	}
+	
 	public void usunWszystkieOsoby() {
 		try {
+			PlytaDBManager plyta = new PlytaDBManager();
+			plyta.usunWszystkiePlyty();
 			polecenieUsunieciaWszystkich.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("10 blad bazy danych:" + e.getMessage());

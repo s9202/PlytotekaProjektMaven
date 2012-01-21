@@ -20,6 +20,7 @@ public class PlytaDBManager {
 	private PreparedStatement polecenieDodaniaPlyty;
 	private PreparedStatement polecenieOdczytuPlyt;
 	private PreparedStatement polecenieUsunieciaWszystkich;
+	private PreparedStatement polecenieUsunieciaPlyty;
 	
 	public PlytaDBManager()
 	{
@@ -70,6 +71,10 @@ public class PlytaDBManager {
 			
 			polecenieUsunieciaWszystkich = polaczenie.prepareStatement("" +
 					"DELETE FROM plyta" +
+					"");
+			
+			polecenieUsunieciaPlyty = polaczenie.prepareStatement("" +
+					"DELETE FROM plyta WHERE id = ?" +
 					"");
 		}
 		catch (SQLException e) {
@@ -124,5 +129,15 @@ public class PlytaDBManager {
 		} catch (SQLException e) {
 			System.out.println("5 blad bazy danych:" + e.getMessage());
 		}
+	}
+	
+	public void usunPlyte( Plyta p ) {
+		try {
+			polecenieUsunieciaPlyty.setLong(1, p.dajIdPlyty());
+			polecenieUsunieciaPlyty.executeUpdate();
+		} catch (SQLException e) {
+			System.out.println("usunPlyte - blad bazy danych:" + e.getMessage());
+		}
+		
 	}
 }

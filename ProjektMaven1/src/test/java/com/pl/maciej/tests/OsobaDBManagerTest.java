@@ -31,6 +31,7 @@ public class OsobaDBManagerTest {
 		id			= 100000;
 		imie		= "Jan";
 		nazwisko	= "Kowalski";
+		
 	}
 
 	@AfterClass
@@ -60,9 +61,16 @@ public class OsobaDBManagerTest {
 	public final void testDodajOsobe() {
 		osoba = new Osoba(imie, nazwisko, plytoteka, id);
 		osobaDb.dodajOsobe(osoba);
-		assertFalse( BLAD_KOM_DOD_OSOBY, osobaDb.dajWszystkieOsoby().isEmpty() );
+		assertNotNull( BLAD_KOM_DOD_OSOBY, osobaDb.dajOsobe( id ) );
 	}
 
+	@Test
+	public final void testUsunOsobe() {
+		osoba = new Osoba(imie, nazwisko, plytoteka, id);
+		osobaDb.usunOsobe(osoba, plytaDb);
+		assertNull( BLAD_KOM_DOD_OSOBY, osobaDb.dajOsobe( id ) );
+	}
+/*	
 	@Test
 	public final void testUsunWszystkieOsoby() {
 		id = id + 1;
@@ -72,5 +80,5 @@ public class OsobaDBManagerTest {
 		osobaDb.usunWszystkieOsoby();
 		assertTrue( BLAD_KOM_DOD_OSOBY, osobaDb.dajWszystkieOsoby().isEmpty());
 	}
-
+*/
 }
